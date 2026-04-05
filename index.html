@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mój Bio Link</title>
+    <!-- Czcionka Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Ikony FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ZMIENNE KOLORYSTYCZNE */
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-color: #a855f7; /* Fioletowy akcent gamingowy */
+            
+            /* Statusy Discorda */
+            --online: #43b581;
+            --idle: #faa61a;
+            --dnd: #f04747;
+            --offline: #747f8d;
+        }
+
+        /* RESET I PODSTAWY */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Zapobiega przewijaniu */
+        }
+
+        /* EKRAN WEJŚCIOWY (OVERLAY) */
+        #entry-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .click-text {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* TŁO WIDEO */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.4; /* Przyciemnienie wideo */
+            filter: blur(3px); /* Lekkie rozmycie tła dla lepszego kontrastu */
+        }
+
+        /* KARTA LIQUID GLASS */
+        .glass-card {
+            background: var(--glass-bg);
+            /* Efekt Liquid Glass: mocny blur + nasycenie + wewnętrzny cień */
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.02);
+            z-index: 10;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Błysk na krawędzi (Liquid effect) */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
+        }
+        .glass-card:hover::before {
+            left: 150%;
+            transition: 1s ease-in-out;
+        }
+
+        /* ZDJĘCIE PROFILOWE */
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .username {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .bio {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        /* WIDŻET DISCORD */
+        .discord-widget {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+        }
+
+        .discord-avatar-wrapper {
+            position: relative;
+        }
+
+        .discord-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2f3136;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #0f0f13; /* Dopasowane do ciemnego tła */
+            background-color: var(--offline);
+        }
+
+        .discord-info {
+            flex: 1;
+        }
+
+        .discord-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            display: block;
+        }
+
+        .discord-activity {
+            font-size: 0.8rem;
+            color: #b9bbbe;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* KRYPTO ADRESY */
+        .crypto-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .crypto-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .crypto-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-color: var(--accent-color);
+        }
+
+        .crypto-btn i {
+            color: var(--accent-color);
+        }
+
+        /* LICZNIK WYŚWIETLEŃ */
+        .view-counter {
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* KOMUNIKAT SKOPIOWANO */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsywność */
+        @media (max-width: 480px) {
+            .glass-card { padding: 30px 20px; }
+            .username { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- EKRAN WEJŚCIOWY -->
+    <div id="entry-overlay">
+        <div class="click-text">[ Kliknij, aby wejść ]</div>
+    </div>
+
+    <!-- TŁO WIDEO (zmień src na link do swojego wideo) -->
+    <video autoplay loop muted playsinline class="video-background">
+        <!-- Przykładowe wideo placeholder (Możesz usunąć i podmienić) -->
+        <source src="https://cdn.pixabay.com/video/2020/05/25/40141-424888506_large.mp4" type="video/mp4">
+    </video>
+
+    <!-- AUDIO W TLE (zmień src na link do swojego pliku mp3) -->
+    <audio id="bg-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- GŁÓWNA KARTA -->
+    <div class="glass-card">
+        
+        <!-- Zmień link do zdjęcia -->
+        <img src="https://i.pravatar.cc/300?img=11" alt="Profil" class="profile-img">
+        <h1 class="username">TwojaNazwa</h1>
+        <p class="bio">Frontend Dev | Gamer | Crypto</p>
+
+        <!-- WIDŻET DISCORD (dane pobierane przez JS) -->
+        <div class="discord-widget">
+            <div class="discord-avatar-wrapper">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Discord" class="discord-avatar" id="dc-avatar">
+                <div class="status-dot" id="dc-status"></div>
+            </div>
+            <div class="discord-info">
+                <span class="discord-name" id="dc-name">Ładowanie...</span>
+                <span class="discord-activity" id="dc-activity">Sprawdzam status Discord...</span>
+            </div>
+        </div>
+
+        <!-- ADRESY KRYPTO -->
+        <div class="crypto-section">
+            <!-- Podmień 'TWÓJ_ADRES_...' na prawdziwe adresy -->
+            <div class="crypto-btn" onclick="copyCrypto('BTC', 'TWÓJ_ADRES_BTC_TUTAJ')">
+                <span><i class="fa-brands fa-btc"></i> Bitcoin</span>
+                <i class="fa-regular fa-copy"></i>
+            </div>
+            <div class="crypto-btn" onclick="copyCrypto('ETH', 'TWÓJ_ADRES_ETH_TUTAJ')">
+                <span><i class="fa-brands fa-ethereum"></i> Ethereum</span>
+                <i class="fa-regular fa-copy"></i>
+            </div>
+            <div class="crypto-btn" onclick="copyCrypto('LTC', 'TWÓJ_ADRES_LTC_TUTAJ')">
+                <span><i class="fa-solid fa-litecoin-sign"></i> Litecoin</span>
+                <i class="fa-regular fa-copy"></i>
+            </div>
+        </div>
+
+        <!-- LICZNIK WYŚWIETLEŃ -->
+        <div class="view-counter">
+            <i class="fa-solid fa-eye"></i> Wyświetlenia profilu: <span id="views-count">0</span>
+        </div>
+    </div>
+
+    <!-- POWIADOMIENIE TOAST -->
+    <div id="toast">Skopiowano do schowka!</div>
+
+    <script>
+        // ==========================================
+        // KONFIGURACJA 
+        // ==========================================
+        
+        // 1. WPISZ TUTAJ SWOJE ID DISCORD (Musisz być na serwerze Lanyard: discord.gg/lanyard)
+        const DISCORD_ID = "156114103033757696"; // Zmień na swoje! (To jest publiczne ID twórcy Lanyard jako przykład)
+
+        // ==========================================
+        // LOGIKA EKRANU WEJŚCIOWEGO I AUDIO
+        // ==========================================
+        const overlay = document.getElementById('entry-overlay');
+        const audio = document.getElementById('bg-audio');
+
+        overlay.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            audio.volume = 0.5; // Ustaw głośność (0.0 do 1.0)
+            audio.play().catch(e => console.log("Audio zablokowane przez przeglądarkę"));
+        });
+
+        // ==========================================
+        // KOPIOWANIE ADRESÓW KRYPTO
+        // ==========================================
+        function copyCrypto(coinName, address) {
+            // Bezpieczne kopiowanie do schowka
+            const tempInput = document.createElement("input");
+            tempInput.value = address;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast(`Skopiowano adres ${coinName}!`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==========================================
+        // INTEGRACJA Z DISCORDEM (API LANYARD)
+        // ==========================================
+        async function fetchDiscordData() {
+            try {
+                const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const d = data.data;
+                    
+                    // Aktualizacja nazwy
+                    document.getElementById('dc-name').innerText = d.discord_user.username;
+
+                    // Aktualizacja Avatara
+                    if (d.discord_user.avatar) {
+                        document.getElementById('dc-avatar').src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.png`;
+                    }
+
+                    // Aktualizacja Statusu (kolor kropki)
+                    const statusDot = document.getElementById('dc-status');
+                    const colors = {
+                        online: 'var(--online)',
+                        idle: 'var(--idle)',
+                        dnd: 'var(--dnd)',
+                        offline: 'var(--offline)'
+                    };
+                    statusDot.style.backgroundColor = colors[d.discord_status];
+
+                    // Aktualizacja Aktywności (Rich Presence)
+                    const activityElement = document.getElementById('dc-activity');
+                    
+                    // Jeśli słucha Spotify
+                    if (d.listening_to_spotify) {
+                        activityElement.innerHTML = `<i class="fa-brands fa-spotify" style="color: #1DB954;"></i> Słucha: ${d.spotify.song} - ${d.spotify.artist}`;
+                    } 
+                    // Jeśli w coś gra
+                    else if (d.activities.length > 0) {
+                        // Szukamy gry (nie bierzemy custom statusu jako gry)
+                        const game = d.activities.find(x => x.type === 0);
+                        if (game) {
+                            activityElement.innerText = `Gra w: ${game.name}`;
+                        } else {
+                            // Jeśli ma po prostu opis statusu
+                            const customStatus = d.activities.find(x => x.type === 4);
+                            if (customStatus && customStatus.state) {
+                                activityElement.innerText = customStatus.state;
+                            } else {
+                                activityElement.innerText = "Brak aktywności";
+                            }
+                        }
+                    } else {
+                        activityElement.innerText = "Brak aktywności";
+                    }
+                }
+            } catch (error) {
+                console.error("Nie udało się pobrać danych z Discorda", error);
+                document.getElementById('dc-name').innerText = "Discord";
+                document.getElementById('dc-activity').innerText = "Niedostępny";
+            }
+        }
+
+        // Pobierz dane od razu, potem odświeżaj co 15 sekund
+        fetchDiscordData();
+        setInterval(fetchDiscordData, 15000);
+
+        // ==========================================
+        // PROSTY LICZNIK WYŚWIETLEŃ (Lokalny)
+        // ==========================================
+        // UWAGA: To jest prosty licznik bazujący na localStorage przeglądarki. 
+        // Będzie zliczał wejścia danej osoby. Do globalnego licznika potrzebowałbyś 
+        // podpiąć np. Firebase lub darmowe API licznika.
+        let visits = localStorage.getItem('profile_visits');
+        if (!visits) {
+            visits = 1;
+        } else {
+            visits = parseInt(visits) + 1;
+        }
+        localStorage.setItem('profile_visits', visits);
+        
+        // Animacja liczenia od 0 do aktualnej liczby (efekt wizualny)
+        let currentCount = 0;
+        const countElement = document.getElementById('views-count');
+        
+        // Dodajmy losową wartość (np. +1234) aby licznik wyglądał na większy z perspektywy demo
+        // Jeśli chcesz prawdziwy licznik, usuń "+ 1234"
+        const displayVisits = visits + 1234; 
+
+        const counterInterval = setInterval(() => {
+            currentCount += Math.ceil(displayVisits / 50);
+            if(currentCount >= displayVisits) {
+                currentCount = displayVisits;
+                clearInterval(counterInterval);
+            }
+            countElement.innerText = currentCount;
+        }, 30);
+
+    </script>
+</body>
+</html>
