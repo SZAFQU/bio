@@ -234,10 +234,29 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             border-color: var(--accent-color);
         }
-        .crypto-btn i.brand-icon {
+
+        .crypto-btn span {
+            display: flex;
+            align-items: center;
+        }
+
+        .crypto-btn .brand-btc {
             color: var(--accent-color);
             margin-right: 8px;
             font-size: 1.1rem;
+        }
+
+        .crypto-btn .brand-eth {
+            color: var(--accent-color);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }        
+
+        .crypto-btn svg.brand-ltc {
+            width: 1.15rem;
+            height: 1.15rem;
+            fill: var(--accent-color);
+            margin-right: 3px; 
         }
 
         /* TOAST */
@@ -291,24 +310,21 @@
         </div>
 
         <div class="crypto-section animate-item delay-4">
-            <div class="crypto-btn" onclick="copyCrypto('BTC', 'ADRES_BTC')">
-                <span><i class="fa-brands fa-btc brand-icon"></i> Bitcoin</span>
+            <div class="crypto-btn" onclick="copyCrypto('BTC', 'bc1qlnfsp45mg79gh3jjwmjepm77gtc6rhzjvp7p2s')">
+                <span><i class="fa-brands fa-btc brand-btc"></i> Bitcoin</span>
                 <i class="fa-regular fa-copy"></i>
             </div>
-            <div class="crypto-btn" onclick="copyCrypto('ETH', 'ADRES_ETH')">
-                <span><i class="fa-brands fa-ethereum brand-icon"></i> Ethereum</span>
+            <div class="crypto-btn" onclick="copyCrypto('ETH', '0x02f042F66a8d01D294D85962cfB081e9a589537B')">
+                <span><i class="fa-brands fa-ethereum brand-eth"></i> Ethereum</span>
                 <i class="fa-regular fa-copy"></i>
             </div>
-            <div class="crypto-btn" onclick="copyCrypto('LTC', 'ADRES_LTC')">
-                <span><svg width="18" height="18" viewBox="0 0 24 24" fill="#345d9d" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle; filter: drop-shadow(0 0 3px #345d9d);">
-    <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#345D9D"/>
-    <path d="M11.9564 16.591L13.1118 12.3384H15.1584L14.7314 13.9113C14.6724 14.1274 14.786 14.3418 14.9942 14.4144L17.587 15.3182C17.7951 15.3908 18.026 15.2862 18.1147 15.0792L18.9103 13.2255C18.999 13.0185 18.9103 12.7797 18.7072 12.6732L16.5413 11.538L17.701 7.28539C17.759 7.06927 17.6454 6.85493 17.4372 6.78229L14.9912 5.92984C14.7831 5.85721 14.5521 5.96177 14.4634 6.16874L13.3038 10.4214H11.2571L11.6841 8.84846C11.7431 8.63234 11.6295 8.41799 11.4214 8.34536L8.82851 7.44155C8.62039 7.36892 8.3895 7.47348 8.30078 7.68045L7.50518 9.53416C7.41646 9.74113 7.50518 9.97996 7.70827 10.0865L9.87413 11.2216L8.71453 15.4742C8.65555 15.6904 8.76911 15.9047 8.97723 15.9773L11.4233 16.8298C11.6314 16.9024 11.8623 16.7979 11.951 16.591H11.9564Z" fill="white"/>
-</svg> Litecoin</span>
+            <div class="crypto-btn" onclick="copyCrypto('LTC', 'LSE93LuwswntAj5qHeL1T54mBcfaXSdSuM')">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" class="brand-ltc"><g><path d="m56.46 91.39 7.11-24.29 10.8-3.49 2.6-9.17-10.71 3.46 12.32-42.13H59.14l-14.7 49.18-11.79 3.8-2.6 9.17 11.64-3.76-10.19 34.07h61.24l5.21-16.84z" fill="#a855f7"></path></g></svg> Litecoin</span>
                 <i class="fa-regular fa-copy"></i>
             </div>
         </div>
 
-    </div>
+        </div>
 
     <div id="toast">Copied!</div>
 
