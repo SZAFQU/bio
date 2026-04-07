@@ -339,7 +339,7 @@
         overlay.addEventListener('click', () => {
             overlay.classList.add('hidden');
             document.body.classList.add('loaded');
-            audio.volume = 0.5;
+            audio.volume = 1,0;
             audio.play().catch(e => console.log("Audio block"));
             video.play().catch(e => console.log("Video block"));
         });
