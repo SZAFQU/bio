@@ -8,15 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ZMIENNE KOLORYSTYCZNE */
         :root {
             --bg-color: #050505;
             --text-color: #ffffff;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --accent-color: #a855f7; /* Fioletowy akcent */
+            --accent-color: #a855f7;
             
-            /* Statusy Discorda */
             --online: #43b581;
             --idle: #faa61a;
             --dnd: #f04747;
@@ -40,7 +38,6 @@
             overflow: hidden;
         }
 
-        /* EKRAN WEJŚCIOWY */
         #entry-overlay {
             position: fixed;
             top: 0;
@@ -75,7 +72,6 @@
             pointer-events: none;
         }
 
-        /* TŁO WIDEO */
         .video-background {
             position: fixed;
             top: 0;
@@ -93,7 +89,6 @@
             filter: grayscale(0.2) blur(0px);
         }
 
-        /* KARTA LIQUID GLASS */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(25px) saturate(160%);
@@ -134,7 +129,6 @@
             transition: 0.7s ease-in-out;
         }
 
-        /* ANIMACJE ELEMENTÓW W KARDZIE */
         .animate-item {
             opacity: 0;
             transform: translateY(20px);
@@ -153,7 +147,6 @@
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.8s; }
 
-        /* ZDJĘCIE PROFILOWE */
         .profile-img {
             width: 110px;
             height: 110px;
@@ -182,7 +175,6 @@
             margin-bottom: 25px;
         }
 
-        /* WIDŻET DISCORD */
         .discord-widget {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
@@ -213,7 +205,6 @@
         .discord-name { font-size: 0.95rem; font-weight: 600; color: #fff; display: block; }
         .discord-activity { font-size: 0.8rem; color: #b9bbbe; display: block; margin-top: 2px; }
 
-        /* KRYPTO ADRESY */
         .crypto-section { display: flex; flex-direction: column; gap: 12px; }
         
         .crypto-btn {
@@ -259,8 +250,7 @@
             fill: var(--accent-color);
             margin-right: 3px; 
         }
-
-        /* TOAST */
+    
         #toast {
             position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%) translateY(100px);
